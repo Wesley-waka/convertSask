@@ -5,6 +5,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { LoggerMiddleware } from './projects/logger.middleware';
 import { ProjectsController } from './projects/project.controller';
 import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from './config/config.module';
 
 // const provider= {
 //   provide: 'CONNECTION',
@@ -16,18 +17,24 @@ import { APP_GUARD } from '@nestjs/core';
 // }
 
 
+// @Module({
+//   imports: [ProjectsModule],
+//   controllers: [AppController],
+//   providers: [AppService],
+//   /*
+//   providers: [
+//     {
+//     provide: APP_GUARD,
+//     useClass: RolesGuard
+//     },
+//   ],
+//   */
+// })
+
 @Module({
-  imports: [ProjectsModule],
+  imports: [ConfigModule.register({folder: './config'})],
   controllers: [AppController],
-  providers: [AppService],
-  /*
-  providers: [
-    {
-    provide: APP_GUARD,
-    useClass: RolesGuard
-    },
-  ],
-  */
+  providers: [AppService]
 })
 
 
