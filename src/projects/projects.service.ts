@@ -1,6 +1,6 @@
 import {forwardRef, Inject, Injectable, OnModuleInit, Scope} from '@nestjs/common'
 import { CreateProjectDto } from './zod-schema';
-import { INQUIRER, ModuleRef, REQUEST } from '@nestjs/core';
+import { INQUIRER, LazyModuleLoader, ModuleRef, REQUEST } from '@nestjs/core';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable({scope: Scope.REQUEST})
@@ -10,11 +10,13 @@ export class ProjectService implements OnModuleInit{
     //     private commonService: UsersService
     // ){}
     private service: UsersService;
-    constructor(private moduleRef: ModuleRef){}
+    // constructor(private moduleRef: ModuleRef){}
+    constructor(private lazyModuleLoader: LazyModuleLoader){}
 
-    onModuleInit(){
-        this.service = this.moduleRef.get(UsersService,{strict: false})
-    }
+
+    // onModuleInit(){
+    //     this.service = this.moduleRef.get(UsersService,{strict: false})
+    // }
     // constructor(@Inject(REQUEST) private request: Request){}
     // for GraphQL applications
     // constructor(@Inject(REQUEST) private request: Request){}
