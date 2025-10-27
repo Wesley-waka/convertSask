@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { Injectable, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProjectsModule } from './projects/projects.module';
@@ -6,6 +6,7 @@ import { LoggerMiddleware } from './projects/logger.middleware';
 import { ProjectsController } from './projects/project.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from './config/config.module';
+import { ProjectService } from './projects/projects.service';
 
 // const provider= {
 //   provide: 'CONNECTION',
@@ -17,31 +18,33 @@ import { ConfigModule } from './config/config.module';
 // }
 
 
-// @Module({
-//   imports: [ProjectsModule],
-//   controllers: [AppController],
-//   providers: [AppService],
-//   /*
-//   providers: [
-//     {
-//     provide: APP_GUARD,
-//     useClass: RolesGuard
-//     },
-//   ],
-//   */
-// })
-
 @Module({
-  imports: [ConfigModule.register({folder: './config'})],
+  imports: [ProjectsModule],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
+  /*
+  providers: [
+    {
+    provide: APP_GUARD,
+    useClass: RolesGuard
+    },
+  ],
+  */
 })
 
 
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes(ProjectsController);
-  }
-}
+
+// @Module({
+//   imports: [ConfigModule.register({folder: './config'})],
+//   controllers: [AppController],
+//   providers: [AppService]
+// })
+
+
+// export class AppModule implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer
+//       .apply(LoggerMiddleware)
+//       .forRoutes(ProjectsController);
+//   }
+// }

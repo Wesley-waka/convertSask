@@ -1,4 +1,4 @@
-import { Body, Controller,DefaultValuePipe,Get, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, UseFilters, UseInterceptors, UsePipes } from "@nestjs/common";
+import { Body, Controller,DefaultValuePipe,Get, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Scope, UseFilters, UseInterceptors, UsePipes } from "@nestjs/common";
 import { ProjectService } from "./projects.service";
 import { ForbiddenException } from "./forbidden.exception";
 import { HttpExceptionFilter } from "./http-exception.filter";
@@ -7,7 +7,10 @@ import { createProjectSchema, CreateProjectDto } from "./zod-schema";
 import { Roles } from "./decorator/roles.decorator";
 import { LoggingInterceptor } from "./interceptors/logging.interceptor";
 
-@Controller('project')
+@Controller({
+    path: 'project',
+    scope: Scope.REQUEST,
+})
 // @UseGuards(new RolesGuard())
 @UseInterceptors(LoggingInterceptor)
 export class ProjectsController{
