@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ProjectService } from './projects/projects.service';
 import { ConfigModule} from '@nestjs/config'
 import configuration from './config/configuration';
+import databaseConfig from './config/database.config';
 
 // const provider= {
 //   provide: 'CONNECTION',
@@ -22,7 +23,7 @@ import configuration from './config/configuration';
 
 @Module({
   imports: [ProjectsModule,ConfigModule.forRoot({ 
-    load: [configuration],
+    load: [databaseConfig],
     envFilePath: ['.development.env','.env.development.local','env.development']
   })],
   controllers: [AppController],
