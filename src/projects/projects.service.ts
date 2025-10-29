@@ -4,7 +4,7 @@ import { INQUIRER, LazyModuleLoader, ModuleRef, REQUEST } from '@nestjs/core';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable({scope: Scope.REQUEST})
-export class ProjectService implements OnModuleInit{
+export class ProjectService {
     // constructor (
     //     @Inject(forwardRef(()=>UsersService))
     //     private commonService: UsersService
