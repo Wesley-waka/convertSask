@@ -2,6 +2,8 @@ import {forwardRef, Inject, Injectable, OnModuleInit, Scope} from '@nestjs/commo
 import { CreateProjectDto } from './zod-schema';
 import { INQUIRER, LazyModuleLoader, ModuleRef, REQUEST } from '@nestjs/core';
 import { UsersService } from 'src/users/users.service';
+import { ConfigService as configService, ConfigType } from '@nestjs/config';
+import databaseConfig from 'src/config/database.config';
 
 @Injectable({scope: Scope.REQUEST})
 export class ProjectService {
@@ -11,7 +13,14 @@ export class ProjectService {
     // ){}
     private service: UsersService;
     // constructor(private moduleRef: ModuleRef){}
-    constructor(private lazyModuleLoader: LazyModuleLoader){}
+    // constructor(private lazyModuleLoader: LazyModuleLoader,configService: configService){
+    //     const dbHost = configService.get<string>('database.host');
+    // }
+
+    constructor(
+        @Inject(databaseConfig.KEY)
+        private dbConfig: ConfigType<typeof databaseConfig>,
+    ){}
 
 
     // onModuleInit(){

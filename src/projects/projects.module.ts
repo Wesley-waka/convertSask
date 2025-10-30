@@ -2,6 +2,8 @@ import {Module, ValidationPipe} from '@nestjs/common';
 import {ProjectsController} from './project.controller';
 import { ProjectService } from './projects.service';
 import { APP_PIPE } from '@nestjs/core';
+import databaseConfig from 'src/config/database.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 const mockProjectsService = {
     findAll: () => [],
@@ -9,7 +11,9 @@ const mockProjectsService = {
     create: () => {},
 }
 @Module({
-    imports: [],
+    imports: [
+        TypeOrmModule.forRootAsync(databaseConfig.asProvider())
+    ],
     controllers: [ProjectsController],
     providers: [ProjectService],
     // providers: [

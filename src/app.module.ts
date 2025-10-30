@@ -10,7 +10,7 @@ import { ProjectService } from './projects/projects.service';
 import { ConfigModule} from '@nestjs/config'
 import configuration from './config/configuration';
 import databaseConfig from './config/database.config';
-
+import * as Joi from 'joi';
 // const provider= {
 //   provide: 'CONNECTION',
 //   useFactory:(myProvider:string,myOptionalProvider?:string)=>{
@@ -24,7 +24,18 @@ import databaseConfig from './config/database.config';
 @Module({
   imports: [ProjectsModule,ConfigModule.forRoot({ 
     load: [databaseConfig],
-    envFilePath: ['.development.env','.env.development.local','env.development']
+    validationSchema: Joi.object({
+      NODE_ENV: Joi.string()
+      .valid('development','production','test','provision')
+      .default('development'),
+      PORT: Joi.number().port().default(3000)
+    }),
+    validationOptions: {
+      allowUnkown: false,
+      abortEarly: true,
+    },
+    envFilePath: ['.development.env','.env.development.local','env.development'],
+    cache: true
   })],
   controllers: [AppController],
   providers: [AppService],
@@ -37,6 +48,10 @@ import databaseConfig from './config/database.config';
   ],
   */
 })
+
+export class AppModule{
+  
+}
 
 
 

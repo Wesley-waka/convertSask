@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiUnauthorizedResponse } from "@nestjs/swagger";
 
 export function Auth(){
     applyDecorators(
-        setMetadata('roles',roles),
+        // setMetadata('roles',roles),
         UseGuards(AuthGuard),
         ApiBearerAuth(),
         ApiUnauthorizedResponse({description: 'Unauthorized'})
