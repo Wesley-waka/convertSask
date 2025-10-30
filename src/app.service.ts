@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectService } from './projects/projects.service';
+import { ApiConfigService } from './config/config.service';
 
 // @Injectable()
 // export class AppService {
@@ -10,11 +11,10 @@ import { ProjectService } from './projects/projects.service';
 
 @Injectable()
 export class AppService{
-  constructor(private helloService: ProjectService){}
-
-  getHello(): string{
-    this.helloService.findAll()
-    return 'This action returns all projects';
+  constructor(apiConfigService: ApiConfigService){
+    if(apiConfigService.isAuthEnabled){
+      
+    }
   }
 
 }

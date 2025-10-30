@@ -11,6 +11,7 @@ import { ConfigModule} from '@nestjs/config'
 import configuration from './config/configuration';
 import databaseConfig from './config/database.config';
 import * as Joi from 'joi';
+import { validate } from './env.validation';
 // const provider= {
 //   provide: 'CONNECTION',
 //   useFactory:(myProvider:string,myOptionalProvider?:string)=>{
@@ -24,6 +25,7 @@ import * as Joi from 'joi';
 @Module({
   imports: [ProjectsModule,ConfigModule.forRoot({ 
     load: [databaseConfig],
+    validate,
     validationSchema: Joi.object({
       NODE_ENV: Joi.string()
       .valid('development','production','test','provision')
@@ -35,8 +37,11 @@ import * as Joi from 'joi';
       abortEarly: true,
     },
     envFilePath: ['.development.env','.env.development.local','env.development'],
-    cache: true
-  })],
+    cache: true,
+    expandVariables: true
+  }),
+    // ConditionalModule.registerWhen(FooBarModule,(env: NodeJS.ProcessEnv) => !!env['foo'] && !!env['bar']),
+  ],
   controllers: [AppController],
   providers: [AppService],
   /*
@@ -50,7 +55,7 @@ import * as Joi from 'joi';
 })
 
 export class AppModule{
-  
+
 }
 
 
