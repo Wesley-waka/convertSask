@@ -12,6 +12,9 @@ import configuration from './config/configuration';
 import databaseConfig from './config/database.config';
 import * as Joi from 'joi';
 import { validate } from './env.validation';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { User } from './users/user.entity';
 // const provider= {
 //   provide: 'CONNECTION',
 //   useFactory:(myProvider:string,myOptionalProvider?:string)=>{
@@ -22,40 +25,57 @@ import { validate } from './env.validation';
 // }
 
 
+// @Module({
+//   imports: [ProjectsModule,ConfigModule.forRoot({ 
+//     load: [databaseConfig],
+//     validate,
+//     validationSchema: Joi.object({
+//       NODE_ENV: Joi.string()
+//       .valid('development','production','test','provision')
+//       .default('development'),
+//       PORT: Joi.number().port().default(3000)
+//     }),
+//     validationOptions: {
+//       allowUnkown: false,
+//       abortEarly: true,
+//     },
+//     envFilePath: ['.development.env','.env.development.local','env.development'],
+//     cache: true,
+//     expandVariables: true
+//   }),
+//     // ConditionalModule.registerWhen(FooBarModule,(env: NodeJS.ProcessEnv) => !!env['foo'] && !!env['bar']),
+//   ],
+//   controllers: [AppController],
+//   providers: [AppService],
+//   /*
+//   providers: [
+//     {
+//     provide: APP_GUARD,
+//     useClass: RolesGuard
+//     },
+//   ],
+//   */
+// })
+
+// Database intergration
 @Module({
-  imports: [ProjectsModule,ConfigModule.forRoot({ 
-    load: [databaseConfig],
-    validate,
-    validationSchema: Joi.object({
-      NODE_ENV: Joi.string()
-      .valid('development','production','test','provision')
-      .default('development'),
-      PORT: Joi.number().port().default(3000)
-    }),
-    validationOptions: {
-      allowUnkown: false,
-      abortEarly: true,
-    },
-    envFilePath: ['.development.env','.env.development.local','env.development'],
-    cache: true,
-    expandVariables: true
-  }),
-    // ConditionalModule.registerWhen(FooBarModule,(env: NodeJS.ProcessEnv) => !!env['foo'] && !!env['bar']),
-  ],
-  controllers: [AppController],
-  providers: [AppService],
-  /*
-  providers: [
-    {
-    provide: APP_GUARD,
-    useClass: RolesGuard
-    },
-  ],
-  */
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'root',
+      database: 'test',
+      entities: [User],
+      // set true only in development
+      // synchronize: true
+    })
+  ]
 })
 
 export class AppModule{
-
+  constructor(private dataSource: DataSource){}
 }
 
 
