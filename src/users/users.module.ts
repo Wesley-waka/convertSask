@@ -4,13 +4,18 @@ import { ConfigModule } from "@nestjs/config";
 import { ConfigService } from "@nestjs/config";
 import { User } from "./user.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { UserSubscriber } from "./users.subscribe";
+import { SequelizeModule } from "@nestjs/sequelize";
 
 @Module({
     imports:[
         ConfigModule,
-        TypeOrmModule.forFeature([User])
+        TypeOrmModule.forFeature([User]),
+        // Using schema instead
+        // TypeOrmModule.forFeature([UseSchema])
+        SequelizeModule.forFeature([User])
     ],
-    providers: [UsersService],
+    providers: [UsersService,UserSubscriber],
     exports: [UsersService,TypeOrmModule]
 })
 

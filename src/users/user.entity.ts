@@ -15,5 +15,5 @@ export class User{
     isActive: boolean;
 
     // @OneToMany(type => Photo,photo => photo.user)
-    photos: Photo[]
+    // photos: Photo[]
 }

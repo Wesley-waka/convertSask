@@ -15,6 +15,7 @@ import { validate } from './env.validation';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { User } from './users/user.entity';
+import { SequelizeModule } from '@nestjs/sequelize';
 // const provider= {
 //   provide: 'CONNECTION',
 //   useFactory:(myProvider:string,myOptionalProvider?:string)=>{
@@ -57,20 +58,72 @@ import { User } from './users/user.entity';
 //   */
 // })
 
+
+const defaultOptions = {
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: 'root',
+  database: 'test',
+  entities: [User],
+  // set true only in development
+  // synchronize: true
+  autoLoadEntities: true,
+};
+
+const defaultOptions2 = {
+  type: 'postgres',
+  port: 5432,
+  username: 'user',
+  password: 'password',
+  database: 'db',
+  synchronize: true,
+};
+
+
 // Database intergration
+
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   username: 'root',
+    //   password: 'root',
+    //   database: 'test',
+    //   entities: [User],
+    //   // set true only in development
+    //   // synchronize: true
+    //   autoLoadEntities: true,
+    // })
+
+    // for dynamicness when difference in storage
+    // TypeOrmModule.forRoot({
+    //   ...defaultOptions,
+    //   host: 'uder_db_host',
+    //   entities: [User]
+    // }),
+    // TypeOrmModule.forRoot({
+    //   ...defaultOptions2,
+    //   name: 'albumsConnection',
+    //   host: 'album_db_host',
+    //   entities: [Album]
+    // })
+    SequelizeModule.forRoot({
+      dialect: 'mysql',
       host: 'localhost',
       port: 3306,
       username: 'root',
       password: 'root',
       database: 'test',
-      entities: [User],
-      // set true only in development
-      // synchronize: true
+      models: [],
+      autoLoadModels: true,
+      synchronize: true
     })
+    // TypeOrmModule.forFeature([User]),
+    // TypeOrmModule.forFeature([Album],'albumsConnection')
   ]
 })
 
