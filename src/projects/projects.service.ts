@@ -4,6 +4,10 @@ import { INQUIRER, LazyModuleLoader, ModuleRef, REQUEST } from '@nestjs/core';
 import { UsersService } from 'src/users/users.service';
 import { ConfigService as configService, ConfigType } from '@nestjs/config';
 import databaseConfig from 'src/config/database.config';
+import { Cat } from 'src/schemas/cat.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/sequelize';
+import { Project } from './schemas/project.schems';
 
 @Injectable({scope: Scope.REQUEST})
 export class ProjectService {
@@ -17,10 +21,12 @@ export class ProjectService {
     //     const dbHost = configService.get<string>('database.host');
     // }
 
-    constructor(
-        @Inject(databaseConfig.KEY)
-        private dbConfig: ConfigType<typeof databaseConfig>,
-    ){}
+    // constructor(
+    //     @Inject(databaseConfig.KEY)
+    //     private dbConfig: ConfigType<typeof databaseConfig>,
+    // ){}
+
+    constructor(@InjectModel(Project.name) private projectModel: Model<Project>){}
 
 
     // onModuleInit(){
@@ -39,6 +45,6 @@ export class ProjectService {
     }
 
     create(body: CreateProjectDto){
-        return body
+        return this.projectModel.create(body)
     }
 }
