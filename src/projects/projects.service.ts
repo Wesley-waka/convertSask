@@ -57,4 +57,6 @@ export class ProjectService {
     async findAll(): Promise<Project[]>{
         return this.projectModel.find().exec();
     }
+
+    
 }

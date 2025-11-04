@@ -21,6 +21,8 @@ import { Cat, CatSchema } from './schemas/cat.schema';
 import { CACHE_MANAGER, CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis, { Keyv } from '@keyv/redis';
 import {CacheableMemory} from 'cacheable';
+import { ScheduleModule } from '@nestjs/schedule';
+import { BullModule } from '@nestjs/bullmq';
 // const provider= {
 //   provide: 'CONNECTION',
 //   useFactory:(myProvider:string,myOptionalProvider?:string)=>{
@@ -140,22 +142,36 @@ const defaultOptions2 = {
     //     return connection;
     //   }
     // })
-    CacheModule.registerAsync({
-      useFactory: async () =>{
-        return {
-          stores: [
-            new Keyv({
-              store: new CacheableMemory({ttl: 6000,lruSize: 500})
-            }),
-            new KeyvRedis('redis://localhost:6379')
-          ]
-        }
+    // CacheModule.registerAsync({
+    //   useFactory: async () =>{
+    //     return {
+    //       stores: [
+    //         new Keyv({
+    //           store: new CacheableMemory({ttl: 6000,lruSize: 500})
+    //         }),
+    //         new KeyvRedis('redis://localhost:6379')
+    //       ]
+    //     }
+    //   }
+    // }),
+    // CacheModule.registerAsync({
+    //   useFactory: () =>({
+    //     ttl: 5,
+    //   })
+    // })
+    // ScheduleModule.forRoot(),
+    // BullModule.forRoot({
+    //   connection: {
+    //     host: 'localhost',
+    //     port: 6379
+    //   }
+    // })
+
+    BullModule.registerQueue({
+      name: 'audio',
+      connection: {
+        port: 6380
       }
-    }),
-    CacheModule.registerAsync({
-      useFactory: () =>({
-        ttl: 5,
-      })
     })
 
     // MongooseModule.forRoot('mongodb://localhost/test',{

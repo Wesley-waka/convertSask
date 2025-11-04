@@ -1,4 +1,4 @@
-import { Body, Controller,DefaultValuePipe,Get, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Scope, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller,DefaultValuePipe,Get, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Scope, UseFilters, UseInterceptors, UsePipes, ValidationPipe, Version } from "@nestjs/common";
 import { ProjectService } from "./projects.service";
 import { ForbiddenException } from "./forbidden.exception";
 import { HttpExceptionFilter } from "./http-exception.filter";
@@ -10,6 +10,7 @@ import { LoggingInterceptor } from "./interceptors/logging.interceptor";
 @Controller({
     path: 'project',
     scope: Scope.REQUEST,
+    version: '1'
 })
 // @UseGuards(new RolesGuard())
 @UseInterceptors(LoggingInterceptor)
@@ -19,7 +20,20 @@ export class ProjectsController{
 
     @Get()
     @UseFilters(HttpExceptionFilter)
-    findAll(
+    @Version('1')
+    findAllV1(
+        @Query('activeOnly',new DefaultValuePipe(false),ParseBoolPipe) activeOnly: boolean,
+        @Query('page',new DefaultValuePipe(0),ParseIntPipe) page: number,
+    ):string{
+        return this.projectService.findAll()
+        // throw new HttpException('forbidden',HttpStatus.FORBIDDEN)
+        // throw new ForbiddenException();
+    }
+
+    @Get()
+    @UseFilters(HttpExceptionFilter)
+    @Version('2')
+    findAllV2(
         @Query('activeOnly',new DefaultValuePipe(false),ParseBoolPipe) activeOnly: boolean,
         @Query('page',new DefaultValuePipe(0),ParseIntPipe) page: number,
     ):string{
