@@ -1,4 +1,4 @@
-import { Body, Controller,DefaultValuePipe,Get, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Scope, UseFilters, UseInterceptors, UsePipes } from "@nestjs/common";
+import { Body, Controller,DefaultValuePipe,Get, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Scope, UseFilters, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ProjectService } from "./projects.service";
 import { ForbiddenException } from "./forbidden.exception";
 import { HttpExceptionFilter } from "./http-exception.filter";
@@ -29,6 +29,7 @@ export class ProjectsController{
     }
 
     @Get(':id')
+    @UsePipes(new ValidationPipe({transform: true}))
     find(@Param('id',new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) params: any){
         return this.projectService.findOne(params)
     }

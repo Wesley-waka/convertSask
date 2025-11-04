@@ -6,6 +6,7 @@ import databaseConfig from 'src/config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cat, CatSchema } from 'src/schemas/cat.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Project, ProjectSchema } from './schemas/project.schems';
 
 const mockProjectsService = {
     findAll: () => [],
@@ -15,10 +16,10 @@ const mockProjectsService = {
 @Module({
     imports:[
         MongooseModule.forFeature([{
-            name: Cat.name,
-            schema: CatSchema
-        }])
-    ]
+            name: Project.name,
+            schema: ProjectSchema
+        }],'projects')
+    ],
     // imports: [
     //     TypeOrmModule.forRootAsync(databaseConfig.asProvider())
     // ],
