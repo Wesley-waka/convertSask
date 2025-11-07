@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { BullModuleOptions, sharedBullConfigurationFactory } from "@nestjs/bullmq";
 
 
 @Injectable()

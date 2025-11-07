@@ -2,9 +2,16 @@ import { HttpAdapterHost, LazyModuleLoader, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionFilter } from './projects/all-exception.filter';
 import { HttpException, ValidationPipe, VERSION_NEUTRAL, VersioningType } from '@nestjs/common';
+import { ConsoleLogger } from '@nestjs/common/services/console-logger.service';
+import * as cookieParser from 'cookie-parser';
+import * as compression from 'compression';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{
+    logger: new ConsoleLogger({
+      json: true
+    })
+  });
   // URI versioning
   // app.enableVersioning({
   //   type: VersioningType.URI,
@@ -20,6 +27,8 @@ async function bootstrap() {
     type: VersioningType.MEDIA_TYPE,
     key: 'v=',
   });
+
+  app.use(cookieParser());
 
   // app.enableVersioning({
   //   defaultVersion: '1'
@@ -40,6 +49,8 @@ async function bootstrap() {
     extractor,
   })
   
+    app.use(compression())
+
   const {httpAdapter} = app.get(HttpAdapterHost)
   app.useGlobalFilters(new AllExceptionFilter(httpAdapter))
   // setup for a global guard

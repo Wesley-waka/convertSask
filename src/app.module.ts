@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ProjectsModule } from './projects/projects.module';
 import { LoggerMiddleware } from './projects/logger.middleware';
 import { ProjectsController } from './projects/project.controller';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, NestFactory } from '@nestjs/core';
 // import { ConfigModule } from './config/config.module';
 import { ProjectService } from './projects/projects.service';
 import { ConfigModule, ConfigService} from '@nestjs/config'
@@ -23,6 +23,8 @@ import KeyvRedis, { Keyv } from '@keyv/redis';
 import {CacheableMemory} from 'cacheable';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bullmq';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+
 // const provider= {
 //   provide: 'CONNECTION',
 //   useFactory:(myProvider:string,myOptionalProvider?:string)=>{
@@ -174,6 +176,7 @@ const defaultOptions2 = {
       }
     })
 
+    EventEmitterModule.forRoot()
     // MongooseModule.forRoot('mongodb://localhost/test',{
     //   connectionName: 'cats'
     // }),
