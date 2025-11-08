@@ -24,6 +24,7 @@ import {CacheableMemory} from 'cacheable';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bullmq';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { AuthModule } from './auth/auth.module';
 
 // const provider= {
 //   provide: 'CONNECTION',
@@ -176,7 +177,9 @@ const defaultOptions2 = {
       }
     })
 
-    EventEmitterModule.forRoot()
+    EventEmitterModule.forRoot(),
+
+    AuthModule
     // MongooseModule.forRoot('mongodb://localhost/test',{
     //   connectionName: 'cats'
     // }),

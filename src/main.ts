@@ -5,17 +5,30 @@ import { HttpException, ValidationPipe, VERSION_NEUTRAL, VersioningType } from '
 import { ConsoleLogger } from '@nestjs/common/services/console-logger.service';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
+import * as session from 'express-session';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,{
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule,
+  new FastifyAdapter({
+    logger: true
+  }),
+  {
     logger: new ConsoleLogger({
       json: true
     })
-  });
+  }
+);
   // URI versioning
   // app.enableVersioning({
   //   type: VersioningType.URI,
   // });
+
+  app.use(session({
+    secret: 'my-secret',
+    resave: false,
+    saveUninitialized: false
+  }));
 
   // header versioning
   app.enableVersioning({

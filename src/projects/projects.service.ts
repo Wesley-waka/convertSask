@@ -1,4 +1,4 @@
-import {forwardRef, Inject, Injectable, OnModuleInit, Scope} from '@nestjs/common'
+import {ArgumentMetadata, forwardRef, Inject, Injectable, OnModuleInit, ParseFilePipe, PipeTransform, Post, Scope, UploadedFile, UseInterceptors} from '@nestjs/common'
 import { CreateProjectDto } from './zod-schema';
 import { INQUIRER, LazyModuleLoader, ModuleRef, REQUEST } from '@nestjs/core';
 import { UsersService } from 'src/users/users.service';
@@ -8,6 +8,9 @@ import { Cat } from 'src/schemas/cat.schema';
 import { Connection, Model } from 'mongoose';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Project } from './schemas/project.schems';
+import {Express} from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable({scope: Scope.REQUEST})
 export class ProjectService {
@@ -28,7 +31,7 @@ export class ProjectService {
 
     // constructor(@InjectModel(Project.name) private projectModel: Model<Project>){}
 
-    constructor(@InjectConnection('projects') private connection: Connection,@InjectModel(Project.name) private projectModel: Model<Project>){}
+    constructor(@InjectConnection('projects') private connection: Connection,@InjectModel(Project.name) private projectModel: Model<Project>,httpService: HttpService){}
 
     // onModuleInit(){
     //     this.service = this.moduleRef.get(UsersService,{strict: false})
@@ -44,6 +47,15 @@ export class ProjectService {
     // findOne(params: any){
     //     return `This is what they are searching for ${params}`
     // }
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    uploadFile(@UploadedFile(new ParseFilePipe({
+        validators: [
+
+        ]
+    })) file: Express.Multer.File){
+        console.log(file)
+    }
 
     // create(body: CreateProjectDto){
     //     return this.projectModel.create(body)
@@ -55,8 +67,18 @@ export class ProjectService {
     }
 
     async findAll(): Promise<Project[]>{
-        return this.projectModel.find().exec();
+        // return this.projectModel.find().exec();
+        return this.httpService.get('http://localhost:3000/cats')
     }
 
-    
+
+}
+
+@Injectable()
+export class FileSizeValidationPipe implements PipeTransform{
+    transform(value: any,metadata: ArgumentMetadata){
+        // "value" is an object containing the file's attribues and metadata
+        const oneKb = 1000;
+        return value.size < oneKb;
+    }
 }
